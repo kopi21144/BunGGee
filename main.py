@@ -646,3 +646,75 @@ class BunGGeeBridge:
         self._receipts: Dict[str, BGG_SettlementReceipt] = {}
         self._cashback: Dict[Tuple[str, int], BGG_CashbackAccrual] = {}
         self._nonces: Dict[str, int] = {}
+        self._consumed: set[str] = set()
+        self._epoch_index = 1
+        self._epoch_start = time.time()
+        self._lane_paused = False
+        self._pending_count = 0
+        self._airdrop_leaves: List[BGG_AirdropLeaf] = []
+        self._event_log: List[Tuple[str, Dict[str, Any]]] = []
+        self._volume_wei = 0
+        self._cashback_paid = 0
+
+    def _emit(self, tag: str, payload: Dict[str, Any]) -> None:
+        self._event_log.append((tag, payload))
+
+    def _only_curator(self, caller: str) -> None:
+        if caller.lower() != self._cfg.curator.lower():
+            raise BGG_NotCurator(caller)
+
+    def _lane_open(self) -> None:
+        if self._lane_paused:
+            raise BGG_IntentFrozen("lane paused")
+
+    def current_epoch(self) -> int:
+        elapsed = time.time() - self._epoch_start
+        if elapsed >= EPOCH_SECONDS:
+            jumps = int(elapsed // EPOCH_SECONDS)
+            self._epoch_index += jumps
+            self._epoch_start += jumps * EPOCH_SECONDS
+        return self._epoch_index
+
+    def set_lane_paused(self, caller: str, paused: bool) -> None:
+        self._only_curator(caller)
+        self._lane_paused = paused
+        self._emit("LanePause", {"paused": paused, "by": caller})
+
+    def quote_bridge(
+        self,
+        sender: str,
+        recipient: str,
+        src_chain: int,
+        dst_chain: int,
+        amount_wei: int,
+        route_tag: str,
+    ) -> BGG_BridgeIntent:
+        self._lane_open()
+        _require_addr(sender, "sender")
+        _require_addr(recipient, "recipient")
+        amount_wei = _require_wei(amount_wei)
+        if amount_wei < self._cfg.min_bridge_wei:
+            raise BGG_CapExceeded("below min bridge")
+        if amount_wei > self._cfg.max_single_wei:
+            raise BGG_CapExceeded("above max single")
+        if src_chain == dst_chain:
+            raise BGG_SelfBridge(f"{src_chain}")
+        if src_chain not in self._chains or dst_chain not in self._chains:
+            raise BGG_InvalidRoute("chain missing")
+        if not self._chains[src_chain].enabled or not self._chains[dst_chain].enabled:
+            raise BGG_InvalidRoute("chain disabled")
+        if route_tag not in self._routes:
+            raise BGG_InvalidRoute(route_tag)
+        cashback_bps, hops = self._routes[route_tag]
+        if len(hops) > MAX_ROUTE_HOPS:
+            raise BGG_HopLimit(str(len(hops)))
+        nonce = self._nonces.get(sender.lower(), 0) + 1
+        intent_id = hashlib.sha256(f"{sender}:{nonce}:{time.time()}".encode()).hexdigest()[:32]
+        intent = BGG_BridgeIntent(
+            intent_id=intent_id,
+            sender=sender,
+            recipient=recipient,
+            src_chain=src_chain,
+            dst_chain=dst_chain,
+            amount_wei=amount_wei,
+            phase=BGG_IntentPhase.QUOTED,
