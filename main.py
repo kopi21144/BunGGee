@@ -790,3 +790,75 @@ class BunGGeeBridge:
         key = (intent.sender.lower(), epoch)
         acc = self._cashback.get(key)
         tier = BGG_CashbackTier(min(int(epoch) % BGG_TIER_COUNT, BGG_TIER_COUNT - 1))
+        if acc is None:
+            acc = BGG_CashbackAccrual(
+                holder=intent.sender,
+                epoch=epoch,
+                accrued_wei=cashback_wei,
+                claimed_wei=0,
+                tier=tier,
+                last_intent=intent_id,
+            )
+        else:
+            acc.accrued_wei += cashback_wei
+            acc.last_intent = intent_id
+        self._cashback[key] = acc
+        self._emit("Settled", asdict(receipt))
+        return receipt
+
+    def seed_airdrop_leaves(self, caller: str, leaves: Sequence[BGG_AirdropLeaf]) -> int:
+        self._only_curator(caller)
+        added = 0
+        for leaf in leaves:
+            _require_addr(leaf.account, "airdrop account")
+            _require_wei(leaf.allocation_wei)
+            self._airdrop_leaves.append(leaf)
+            added += 1
+        self._emit("AirdropSeeded", {"count": added})
+        return added
+
+    def _build_merkle_layers(self) -> List[List[bytes]]:
+        if not self._airdrop_leaves:
+            return []
+        layer = [leaf.leaf_hash() for leaf in self._airdrop_leaves]
+        layers: List[List[bytes]] = [layer]
+        while len(layer) > 1:
+            nxt: List[bytes] = []
+            for i in range(0, len(layer), 2):
+                left = layer[i]
+                right = layer[i + 1] if i + 1 < len(layer) else layer[i]
+                nxt.append(_merkle_parent(left, right))
+            layer = nxt
+            layers.append(layer)
+        return layers
+
+    def merkle_root(self) -> Optional[bytes]:
+        layers = self._build_merkle_layers()
+        if not layers:
+            return None
+        return layers[-1][0]
+
+    def verify_airdrop_proof(self, leaf: BGG_AirdropLeaf, proof: Sequence[bytes]) -> bool:
+        computed = leaf.leaf_hash()
+        for sibling in proof:
+            computed = _merkle_parent(computed, sibling)
+        root = self.merkle_root()
+        return root is not None and computed == root
+
+    def claim_airdrop(
+        self,
+        account: str,
+        leaf: BGG_AirdropLeaf,
+        proof: Sequence[bytes],
+    ) -> int:
+        _require_addr(account, "account")
+        if account.lower() != leaf.account.lower():
+            raise BGG_MerkleReject("account mismatch")
+        if leaf.epoch != self.current_epoch():
+            raise BGG_EpochClosed(str(leaf.epoch))
+        if not self.verify_airdrop_proof(leaf, proof):
+            raise BGG_MerkleReject("bad proof")
+        tag = f"airdrop:{leaf.index}:{account.lower()}"
+        if tag in self._consumed:
+            raise BGG_Replay(tag)
+        clip = _mul_bps(leaf.allocation_wei, AIRDROP_CLIP_BPS)
