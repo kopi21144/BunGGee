@@ -574,3 +574,75 @@ BGG_BATCH_SLOTS: Dict[int, Tuple[int, int, str]] = {
     13: (462, 1318, "batch_63c9"),
     14: (140, 572, "batch_668d"),
     15: (226, 1179, "batch_cba2"),
+    16: (573, 1132, "batch_982f"),
+    17: (585, 1580, "batch_e6be"),
+    18: (237, 868, "batch_347b"),
+    19: (569, 1278, "batch_4530"),
+}
+
+def bgg_split_digest(intent: BGG_BridgeIntent) -> Tuple[bytes, bytes]:
+    full = hashlib.sha256(_intent_digest(intent).encode()).digest()
+    return full[:16], full[16:]
+
+def bgg_route_fingerprint(hops: Sequence[BGG_RouteHop]) -> str:
+    parts = [h.digest().hex() for h in hops]
+    return hashlib.sha256("|".join(parts).encode()).hexdigest()
+
+def _sample_airdrop_leaves() -> List[BGG_AirdropLeaf]:
+    rows: List[BGG_AirdropLeaf] = []
+    rows.append(BGG_AirdropLeaf(index=0, account="0xDECf9108656aAD5219b54aE8D1948144D8B79dDa", allocation_wei=100000000000000000, epoch=1))
+    rows.append(BGG_AirdropLeaf(index=1, account="0xf20831aDCd8C0baB351f776650a9eabb469C69A6", allocation_wei=231000000000000000, epoch=3))
+    rows.append(BGG_AirdropLeaf(index=2, account="0xD09c5F666d300213931505221ecA2A385eF640f9", allocation_wei=572000000000000000, epoch=1))
+    rows.append(BGG_AirdropLeaf(index=3, account="0x79388892C98A957CB974D501F4394ac8c42eB238", allocation_wei=409000000000000000, epoch=1))
+    rows.append(BGG_AirdropLeaf(index=4, account="0x914cFb76210802019e524db86F31b3069c9e09ab", allocation_wei=336000000000000000, epoch=2))
+    rows.append(BGG_AirdropLeaf(index=5, account="0x23d4C1DC62Ba90D1028Dbd999b5cB5ACdCa415F8", allocation_wei=862000000000000000, epoch=3))
+    rows.append(BGG_AirdropLeaf(index=6, account="0x948E42D71208dCa9bcC7891DB8e4A53d63F44d1f", allocation_wei=207000000000000000, epoch=2))
+    rows.append(BGG_AirdropLeaf(index=7, account="0xC7560cf4F3d7C8Bb0D86D493836C89871ECEB5F2", allocation_wei=463000000000000000, epoch=3))
+    rows.append(BGG_AirdropLeaf(index=8, account="0xE9e6841A950501a71B2BFd1a66d2Aa94Ae80c0DF", allocation_wei=395000000000000000, epoch=2))
+    rows.append(BGG_AirdropLeaf(index=9, account="0x5Bb92050c5065460093E38607aC6ba39CF75B2Be", allocation_wei=333000000000000000, epoch=2))
+    rows.append(BGG_AirdropLeaf(index=10, account="0xcba3fc82beDDEDfcD9f4b80BF9bb93424dA33b9C", allocation_wei=686000000000000000, epoch=2))
+    rows.append(BGG_AirdropLeaf(index=11, account="0xe09f0AD80A0Ca62615741DdaC3e899c34cED0899", allocation_wei=294000000000000000, epoch=2))
+    rows.append(BGG_AirdropLeaf(index=12, account="0x2b1b28353217D0A85C7717204614fA00752d0FAb", allocation_wei=729000000000000000, epoch=2))
+    rows.append(BGG_AirdropLeaf(index=13, account="0x1504Bd141d8Fcc6B0538cfD7E4D4072e3a7497e9", allocation_wei=105000000000000000, epoch=3))
+    rows.append(BGG_AirdropLeaf(index=14, account="0x5d8eEa5ABd0D2C3a97a85Fc3adD2AA1118589a06", allocation_wei=337000000000000000, epoch=1))
+    rows.append(BGG_AirdropLeaf(index=15, account="0x5e4B55dd3c352C8C1df52756c2375f6c007eA145", allocation_wei=795000000000000000, epoch=3))
+    rows.append(BGG_AirdropLeaf(index=16, account="0xE8e80f1FCc5E23eD0bBa8Ebe829a67c1BE1B0258", allocation_wei=727000000000000000, epoch=3))
+    rows.append(BGG_AirdropLeaf(index=17, account="0x5329dD71ae25EB3Fc7a8546BAA409b8C2d6b4073", allocation_wei=972000000000000000, epoch=1))
+    rows.append(BGG_AirdropLeaf(index=18, account="0x6099b1Cb6c5309dB7ace816Bac31686d723645Cc", allocation_wei=521000000000000000, epoch=2))
+    rows.append(BGG_AirdropLeaf(index=19, account="0x30b493738956b6335665c2B9710993d81F593bfD", allocation_wei=936000000000000000, epoch=2))
+    rows.append(BGG_AirdropLeaf(index=20, account="0xda3615F9938F192C363f4649345f9F3971638808", allocation_wei=815000000000000000, epoch=3))
+    rows.append(BGG_AirdropLeaf(index=21, account="0x1ECEeCec03155Fb8857Ab40944827c0AC0A51B7B", allocation_wei=511000000000000000, epoch=2))
+    rows.append(BGG_AirdropLeaf(index=22, account="0xE2d46C5407c6C3d5ed8dB2D7fDD46CbD9D620A2e", allocation_wei=747000000000000000, epoch=1))
+    rows.append(BGG_AirdropLeaf(index=23, account="0x546D2CAcf5D07897111012C77560AaBaA53F0B42", allocation_wei=605000000000000000, epoch=1))
+    rows.append(BGG_AirdropLeaf(index=24, account="0xf0361E91478e2e16834e757eD35cf46FB470ed44", allocation_wei=300000000000000000, epoch=2))
+    rows.append(BGG_AirdropLeaf(index=25, account="0x3f9d0241CD40d9Be992407819AF2BF9830AEA872", allocation_wei=561000000000000000, epoch=2))
+    rows.append(BGG_AirdropLeaf(index=26, account="0x6E2b27CAebDD6A9CCf69EE0FE1A698e367d95e31", allocation_wei=187000000000000000, epoch=2))
+    rows.append(BGG_AirdropLeaf(index=27, account="0xFAde9406F2c105434f1B58bBc587e8A3ec4BedF5", allocation_wei=253000000000000000, epoch=3))
+    rows.append(BGG_AirdropLeaf(index=28, account="0x9ad0722dB7085A610893D94D5e1fE465f4b550e9", allocation_wei=958000000000000000, epoch=1))
+    rows.append(BGG_AirdropLeaf(index=29, account="0xca031e68e4Af56afEf7Cb0C2eA5d61E33BFE031F", allocation_wei=223000000000000000, epoch=2))
+    rows.append(BGG_AirdropLeaf(index=30, account="0x6Df7B423925CED3Ea89bAE611160eb6e5458441C", allocation_wei=383000000000000000, epoch=1))
+    rows.append(BGG_AirdropLeaf(index=31, account="0x82D6eE8868088D224CECc15141cd804bb4878f77", allocation_wei=626000000000000000, epoch=3))
+    rows.append(BGG_AirdropLeaf(index=32, account="0xdA8E3bbe9f92af4D953AbC0D81006399c9284447", allocation_wei=724000000000000000, epoch=2))
+    return rows
+
+class BunGGeeBridge:
+    """Cross-lane bridge router with epoch cashback and airdrop attestation."""
+
+    def __init__(self, cfg: Optional[BGG_Config] = None) -> None:
+        self._cfg = cfg or BGG_Config(
+            curator=CURATOR_SEAT,
+            relay_desk=RELAY_DESK,
+            cashback_vault=CASHBACK_VAULT,
+            address_a=ADDRESS_A,
+            address_b=ADDRESS_B,
+            address_c=ADDRESS_C,
+        )
+        _require_addr(self._cfg.curator, "curator")
+        _require_addr(self._cfg.relay_desk, "relay_desk")
+        _require_addr(self._cfg.cashback_vault, "cashback_vault")
+        self._chains = _seed_chain_endpoints()
+        self._routes = _seed_route_profiles()
+        self._intents: Dict[str, BGG_BridgeIntent] = {}
+        self._receipts: Dict[str, BGG_SettlementReceipt] = {}
+        self._cashback: Dict[Tuple[str, int], BGG_CashbackAccrual] = {}
+        self._nonces: Dict[str, int] = {}
