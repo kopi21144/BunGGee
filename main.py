@@ -286,3 +286,75 @@ def _seed_chain_endpoints() -> Dict[int, BGG_ChainEndpoint]:
     )
     table[416946] = BGG_ChainEndpoint(
         chain_id=416946,
+        family=BGG_ChainFamily.ROLLUP,
+        gateway="0x17E125f6E0aDd16a965899e5a3b58CB98E6FB2aA",
+        finality_blocks=17,
+        enabled=True,
+    )
+    table[923236] = BGG_ChainEndpoint(
+        chain_id=923236,
+        family=BGG_ChainFamily.SIDECHAIN,
+        gateway="0x1a561A8da5EB8C22E6Bd0240608f9e3A6E8F3f00",
+        finality_blocks=7,
+        enabled=True,
+    )
+    table[755159] = BGG_ChainEndpoint(
+        chain_id=755159,
+        family=BGG_ChainFamily.HUB,
+        gateway="0xD9E4BbB50A9804027c2FA47a42ed003807D52743",
+        finality_blocks=31,
+        enabled=True,
+    )
+    table[824987] = BGG_ChainEndpoint(
+        chain_id=824987,
+        family=BGG_ChainFamily.EVM_L1,
+        gateway="0xE7F56f8B7858441978fc75B83444aA3c40438585",
+        finality_blocks=29,
+        enabled=True,
+    )
+    table[128741] = BGG_ChainEndpoint(
+        chain_id=128741,
+        family=BGG_ChainFamily.EVM_L2,
+        gateway="0x83BAa022B8714797ADff0d507a713CEfF547a14b",
+        finality_blocks=30,
+        enabled=True,
+    )
+    table[256340] = BGG_ChainEndpoint(
+        chain_id=256340,
+        family=BGG_ChainFamily.ROLLUP,
+        gateway="0x85E0Fe2A241F53C6Bd6654FdfE988593bda50359",
+        finality_blocks=27,
+        enabled=False,
+    )
+    table[253889] = BGG_ChainEndpoint(
+        chain_id=253889,
+        family=BGG_ChainFamily.SIDECHAIN,
+        gateway="0x281570e2D4640f78Ff818E5084c370C1D104434C",
+        finality_blocks=29,
+        enabled=True,
+    )
+    table[829954] = BGG_ChainEndpoint(
+        chain_id=829954,
+        family=BGG_ChainFamily.HUB,
+        gateway="0x1440E382f23c35a20487d289692d03c8923DeF57",
+        finality_blocks=28,
+        enabled=True,
+    )
+    table[530434] = BGG_ChainEndpoint(
+        chain_id=530434,
+        family=BGG_ChainFamily.EVM_L1,
+        gateway="0x2a9f55fc4c6f0C64f71d3C3F4e63AA7900c4110F",
+        finality_blocks=37,
+        enabled=True,
+    )
+    table[805187] = BGG_ChainEndpoint(
+        chain_id=805187,
+        family=BGG_ChainFamily.EVM_L2,
+        gateway="0xfc527e59287f832abf56E107444022ee6B4a116F",
+        finality_blocks=22,
+        enabled=True,
+    )
+    table[732210] = BGG_ChainEndpoint(
+        chain_id=732210,
+        family=BGG_ChainFamily.ROLLUP,
+        gateway="0xb4B6797BD09614f48559C335269bE30e496e7236",
