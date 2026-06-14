@@ -430,3 +430,75 @@ def _seed_chain_endpoints() -> Dict[int, BGG_ChainEndpoint]:
         gateway="0xfeEA8212546B97355600FD58a3339C7B4B4238Ff",
         finality_blocks=11,
         enabled=True,
+    )
+    return table
+
+def _seed_route_profiles() -> Dict[str, Tuple[int, List[BGG_RouteHop]]]:
+    profiles: Dict[str, Tuple[int, List[BGG_RouteHop]]] = {}
+    hops_0: List[BGG_RouteHop] = []
+    hops_0.append(BGG_RouteHop(chain_id=242249, relay="0x54Ad53a75282527698Bf3bA97704E774B8Da6549", fee_bps=18, min_confirmations=18))
+    hops_0.append(BGG_RouteHop(chain_id=938202, relay="0xDd03B7B1fb433ae1df0d81f966a5e9909dfCdc34", fee_bps=22, min_confirmations=10))
+    hops_0.append(BGG_RouteHop(chain_id=965541, relay="0xBEdCD7b8A87F623Cb191036D799d102Dc2a211d7", fee_bps=59, min_confirmations=17))
+    hops_0.append(BGG_RouteHop(chain_id=282992, relay="0x9CE26b90364EEF80aC480D9F2Cc7EF6ed976D7bD", fee_bps=34, min_confirmations=4))
+    profiles["lane_886594"] = (116, hops_0)
+    hops_1: List[BGG_RouteHop] = []
+    hops_1.append(BGG_RouteHop(chain_id=786782, relay="0x75C1e6BaaBa012c6324b63b72543D877215f3e8a", fee_bps=27, min_confirmations=21))
+    hops_1.append(BGG_RouteHop(chain_id=813483, relay="0x39E3E83530d70a0589D58e1f9e3A13eA2713a3c2", fee_bps=12, min_confirmations=7))
+    hops_1.append(BGG_RouteHop(chain_id=191766, relay="0x5eE27371eFC8063b66AD99dEdAE19681eEba52eb", fee_bps=104, min_confirmations=10))
+    hops_1.append(BGG_RouteHop(chain_id=769105, relay="0x7D98ab61728c0bd1A26765B9aad119FEdb09868e", fee_bps=24, min_confirmations=3))
+    profiles["lane_c7dc46"] = (352, hops_1)
+    hops_2: List[BGG_RouteHop] = []
+    hops_2.append(BGG_RouteHop(chain_id=330256, relay="0xd9e13ce73B2c5e762bA893C785e4C8590A9A6C45", fee_bps=18, min_confirmations=13))
+    hops_2.append(BGG_RouteHop(chain_id=527398, relay="0x8CCC65F2BfaA2a01406FB2519c64b51f49a0a3ec", fee_bps=96, min_confirmations=12))
+    profiles["lane_870276"] = (542, hops_2)
+    hops_3: List[BGG_RouteHop] = []
+    hops_3.append(BGG_RouteHop(chain_id=692851, relay="0x2D1a0F4f36f23076b46f9D7E502531FA9828E3F7", fee_bps=79, min_confirmations=22))
+    hops_3.append(BGG_RouteHop(chain_id=511396, relay="0x65323721d50B703c31FBB1b79b2E9d1fB0B0dc3D", fee_bps=122, min_confirmations=3))
+    hops_3.append(BGG_RouteHop(chain_id=704884, relay="0x6EA024e63169b50D32C94Fa778d3E2759e6A3743", fee_bps=44, min_confirmations=7))
+    hops_3.append(BGG_RouteHop(chain_id=606061, relay="0x23d8F682f0B0885ad118bb914513c0D9b6c7Aa4A", fee_bps=53, min_confirmations=13))
+    profiles["lane_769b22"] = (171, hops_3)
+    hops_4: List[BGG_RouteHop] = []
+    hops_4.append(BGG_RouteHop(chain_id=546416, relay="0x05d1bF65CA33843F330B40CD07DA8260f58cD4bF", fee_bps=90, min_confirmations=13))
+    hops_4.append(BGG_RouteHop(chain_id=384769, relay="0x641B432D34264Da5221755b69C50D10F24a5c2Dc", fee_bps=82, min_confirmations=11))
+    hops_4.append(BGG_RouteHop(chain_id=234552, relay="0xb400B0Fc4651F0C1A45b4305c8bcD330d3ace075", fee_bps=90, min_confirmations=6))
+    profiles["lane_6997a7"] = (260, hops_4)
+    hops_5: List[BGG_RouteHop] = []
+    hops_5.append(BGG_RouteHop(chain_id=352404, relay="0xe40Ea9543474c17E0CEaC1fAB9A77c4575332657", fee_bps=72, min_confirmations=13))
+    hops_5.append(BGG_RouteHop(chain_id=901088, relay="0x27Ae7F2f070CbeB1c385A08e4D1f9390C6d1cE14", fee_bps=67, min_confirmations=4))
+    profiles["lane_aceb12"] = (606, hops_5)
+    hops_6: List[BGG_RouteHop] = []
+    hops_6.append(BGG_RouteHop(chain_id=690885, relay="0xF2FBdB3dDd7C7219188a6A4270E2c4E186Ce4c51", fee_bps=51, min_confirmations=17))
+    hops_6.append(BGG_RouteHop(chain_id=984533, relay="0xD178eAF78a03891e0804a7e4326e36D9c2fBd571", fee_bps=87, min_confirmations=22))
+    hops_6.append(BGG_RouteHop(chain_id=751211, relay="0x2C7b1EE7A7aA7C50Ca0DD790Ab58BA7f50495F15", fee_bps=42, min_confirmations=12))
+    profiles["lane_b9193f"] = (753, hops_6)
+    hops_7: List[BGG_RouteHop] = []
+    hops_7.append(BGG_RouteHop(chain_id=247106, relay="0x048682314DDE4a6170afa8ec2adCA3Ef45E00be1", fee_bps=20, min_confirmations=12))
+    hops_7.append(BGG_RouteHop(chain_id=621654, relay="0xAFa47397A87571eebB437A51e568f9570A987Ce6", fee_bps=33, min_confirmations=16))
+    hops_7.append(BGG_RouteHop(chain_id=612438, relay="0x964d2b5B69DaAffC4dAa1eAAd78E80d4D9Ef4696", fee_bps=96, min_confirmations=10))
+    hops_7.append(BGG_RouteHop(chain_id=886515, relay="0x91b4a9b821ba09B35b4e6A10F4737d16DBC114f2", fee_bps=104, min_confirmations=5))
+    profiles["lane_85c56b"] = (67, hops_7)
+    hops_8: List[BGG_RouteHop] = []
+    hops_8.append(BGG_RouteHop(chain_id=442586, relay="0x922362348eb41D4Fdc2401a31E38380cbECf029c", fee_bps=104, min_confirmations=15))
+    hops_8.append(BGG_RouteHop(chain_id=299221, relay="0x6f3551a2FCCB805B65283475112FC0A8B6899d54", fee_bps=30, min_confirmations=10))
+    profiles["lane_de52cd"] = (380, hops_8)
+    hops_9: List[BGG_RouteHop] = []
+    hops_9.append(BGG_RouteHop(chain_id=999697, relay="0xbFfFC2B003Ff8bbF4737377A1a0C8761ecc10A26", fee_bps=34, min_confirmations=11))
+    hops_9.append(BGG_RouteHop(chain_id=408314, relay="0xeA982D16529Fe610541415D5B6f16eBe7F80766a", fee_bps=17, min_confirmations=11))
+    hops_9.append(BGG_RouteHop(chain_id=412756, relay="0x84d74221aa22Da63BAA1d172992711c061873f41", fee_bps=122, min_confirmations=15))
+    hops_9.append(BGG_RouteHop(chain_id=407256, relay="0x286C48a0529c640619E5AAE366E2d0786276e885", fee_bps=47, min_confirmations=15))
+    profiles["lane_ef5ca5"] = (151, hops_9)
+    hops_10: List[BGG_RouteHop] = []
+    hops_10.append(BGG_RouteHop(chain_id=697647, relay="0x47A123A8FA720e8e4596B9ec1aB8f08efe999628", fee_bps=99, min_confirmations=5))
+    hops_10.append(BGG_RouteHop(chain_id=690463, relay="0x1352943BE98EE3404A003368a56cEDB0fc753Ee2", fee_bps=12, min_confirmations=6))
+    hops_10.append(BGG_RouteHop(chain_id=124157, relay="0xB6ad1FB3650D62b7719c38e3AC73f0D2ce9761Ff", fee_bps=66, min_confirmations=7))
+    profiles["lane_ff8490"] = (415, hops_10)
+    hops_11: List[BGG_RouteHop] = []
+    hops_11.append(BGG_RouteHop(chain_id=700464, relay="0x0b32AB9d45E4fcFBB084dC74320d564423c0f9B7", fee_bps=86, min_confirmations=15))
+    hops_11.append(BGG_RouteHop(chain_id=491848, relay="0x8b2cFE6f5e6714680D21A9f189b88B5A1f848361", fee_bps=102, min_confirmations=16))
+    hops_11.append(BGG_RouteHop(chain_id=223871, relay="0x54D1f4608c6BfD9952D2BAe2Cca4661C8BaBCA4d", fee_bps=112, min_confirmations=11))
+    profiles["lane_c6701b"] = (723, hops_11)
+    hops_12: List[BGG_RouteHop] = []
+    hops_12.append(BGG_RouteHop(chain_id=204284, relay="0x2710f69363Fc3E8C339be9Ce7f3d7BF29ef648EC", fee_bps=94, min_confirmations=5))
+    hops_12.append(BGG_RouteHop(chain_id=179035, relay="0x7d5F1a68Ac954B88F0CBa5d0CAc53f56510628c7", fee_bps=75, min_confirmations=9))
+    profiles["lane_1253cc"] = (334, hops_12)
+    hops_13: List[BGG_RouteHop] = []
