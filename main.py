@@ -862,3 +862,75 @@ class BunGGeeBridge:
         if tag in self._consumed:
             raise BGG_Replay(tag)
         clip = _mul_bps(leaf.allocation_wei, AIRDROP_CLIP_BPS)
+        if clip <= 0:
+            raise BGG_AirdropClip("zero clip")
+        self._consumed.add(tag)
+        self._emit("AirdropClaimed", {"account": account, "wei": clip})
+        return clip
+
+    def claim_cashback(self, holder: str, epoch: Optional[int] = None) -> int:
+        _require_addr(holder, "holder")
+        ep = epoch if epoch is not None else self.current_epoch()
+        acc = self._cashback.get((holder.lower(), ep))
+        if acc is None:
+            return 0
+        available = acc.accrued_wei - acc.claimed_wei
+        if available <= 0:
+            return 0
+        mult = BGG_TIER_MULTIPLIER.get(acc.tier, BGG_BPS)
+        payout = _mul_bps(available, min(mult, BGG_BPS))
+        acc.claimed_wei += payout
+        self._emit("CashbackClaimed", {"holder": holder, "epoch": ep, "wei": payout})
+        return payout
+
+    def cashback_snapshot(self, holder: str, epoch: Optional[int] = None) -> Optional[BGG_CashbackAccrual]:
+        ep = epoch if epoch is not None else self.current_epoch()
+        return self._cashback.get((holder.lower(), ep))
+
+    def batch_settle(
+        self,
+        caller: str,
+        intent_ids: Sequence[str],
+    ) -> List[BGG_SettlementReceipt]:
+        receipts: List[BGG_SettlementReceipt] = []
+        for iid in intent_ids:
+            receipts.append(
+                self.settle_intent(caller, iid, BGG_SettlementKind.BATCH)
+            )
+        return receipts
+
+    def view_lane_43dd(self) -> Dict[str, Any]:
+        return {
+            "lane": "view_lane_43dd",
+            "epoch": self.current_epoch(),
+            "pending": self._pending_count,
+            "volume": self._volume_wei,
+            "cashback_paid": self._cashback_paid,
+            "routes": len(self._routes),
+            "chains": len(self._chains),
+            "slot": 0,
+        }
+
+    def view_lane_70f9(self) -> Dict[str, Any]:
+        return {
+            "lane": "view_lane_70f9",
+            "epoch": self.current_epoch(),
+            "pending": self._pending_count,
+            "volume": self._volume_wei,
+            "cashback_paid": self._cashback_paid,
+            "routes": len(self._routes),
+            "chains": len(self._chains),
+            "slot": 1,
+        }
+
+    def view_lane_a5a1(self) -> Dict[str, Any]:
+        return {
+            "lane": "view_lane_a5a1",
+            "epoch": self.current_epoch(),
+            "pending": self._pending_count,
+            "volume": self._volume_wei,
+            "cashback_paid": self._cashback_paid,
+            "routes": len(self._routes),
+            "chains": len(self._chains),
+            "slot": 2,
+        }
