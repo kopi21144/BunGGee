@@ -718,3 +718,75 @@ class BunGGeeBridge:
             dst_chain=dst_chain,
             amount_wei=amount_wei,
             phase=BGG_IntentPhase.QUOTED,
+            route_tag=route_tag,
+            nonce=nonce,
+            opened_at=time.time(),
+            cashback_bps=_clip_bps(cashback_bps, CASHBACK_FLOOR_BPS, CASHBACK_CEIL_BPS),
+            airdrop_weight=_mul_bps(amount_wei, AIRDROP_CLIP_BPS) // BGG_SCALE,
+            hops=list(hops),
+        )
+        self._intents[intent_id] = intent
+        self._emit("Quoted", {"intent_id": intent_id, "route": route_tag})
+        return intent
+
+    def lock_intent(self, sender: str, intent_id: str) -> BGG_BridgeIntent:
+        self._lane_open()
+        intent = self._intents.get(intent_id)
+        if intent is None:
+            raise BGG_InvalidRoute(intent_id)
+        if intent.sender.lower() != sender.lower():
+            raise BGG_NotCurator("not sender")
+        if intent.phase != BGG_IntentPhase.QUOTED:
+            raise BGG_IntentFrozen("bad phase")
+        if self._pending_count >= MAX_PENDING_INTENTS:
+            raise BGG_PendingOverflow(str(self._pending_count))
+        intent.phase = BGG_IntentPhase.LOCKED
+        self._pending_count += 1
+        self._nonces[sender.lower()] = intent.nonce
+        self._emit("Locked", {"intent_id": intent_id})
+        return intent
+
+    def relay_intent(self, caller: str, intent_id: str) -> BGG_BridgeIntent:
+        self._lane_open()
+        if caller.lower() not in {self._cfg.relay_desk.lower(), self._cfg.curator.lower()}:
+            raise BGG_NotCurator(caller)
+        intent = self._intents.get(intent_id)
+        if intent is None or intent.phase != BGG_IntentPhase.LOCKED:
+            raise BGG_IntentFrozen(intent_id)
+        intent.phase = BGG_IntentPhase.RELAYED
+        self._emit("Relayed", {"intent_id": intent_id, "relay": caller})
+        return intent
+
+    def settle_intent(
+        self,
+        caller: str,
+        intent_id: str,
+        kind: BGG_SettlementKind = BGG_SettlementKind.STANDARD,
+    ) -> BGG_SettlementReceipt:
+        self._lane_open()
+        if caller.lower() not in {self._cfg.relay_desk.lower(), self._cfg.curator.lower()}:
+            raise BGG_NotCurator(caller)
+        intent = self._intents.get(intent_id)
+        if intent is None or intent.phase != BGG_IntentPhase.RELAYED:
+            raise BGG_IntentFrozen(intent_id)
+        fee_wei = _mul_bps(intent.amount_wei, FEE_CLIP_BPS)
+        cashback_wei = _mul_bps(intent.amount_wei, intent.cashback_bps)
+        if cashback_wei < _mul_bps(intent.amount_wei, CASHBACK_FLOOR_BPS):
+            raise BGG_CashbackFloor(str(cashback_wei))
+        receipt = BGG_SettlementReceipt(
+            intent_id=intent_id,
+            kind=kind,
+            gross_wei=intent.amount_wei,
+            fee_wei=fee_wei,
+            cashback_wei=cashback_wei,
+            settled_at=time.time(),
+        )
+        intent.phase = BGG_IntentPhase.SETTLED
+        self._receipts[intent_id] = receipt
+        self._pending_count = max(0, self._pending_count - 1)
+        self._volume_wei += intent.amount_wei
+        self._cashback_paid += cashback_wei
+        epoch = self.current_epoch()
+        key = (intent.sender.lower(), epoch)
+        acc = self._cashback.get(key)
+        tier = BGG_CashbackTier(min(int(epoch) % BGG_TIER_COUNT, BGG_TIER_COUNT - 1))
