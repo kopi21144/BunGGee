@@ -142,3 +142,75 @@ class BGG_HopLimit(Exception):
     def __init__(self, detail: str = "") -> None:
         base = "hop count exceeds max"
         super().__init__(f"BGG: {base}" + (f" ({detail})" if detail else ""))
+
+@dataclass
+class BGG_RouteHop:
+    chain_id: int
+    relay: str
+    fee_bps: int
+    min_confirmations: int
+
+    def digest(self) -> bytes:
+        blob = f"{self.chain_id}:{self.relay.lower()}:{self.fee_bps}:{self.min_confirmations}"
+        return hashlib.sha256(blob.encode()).digest()
+
+@dataclass
+class BGG_BridgeIntent:
+    intent_id: str
+    sender: str
+    recipient: str
+    src_chain: int
+    dst_chain: int
+    amount_wei: int
+    phase: BGG_IntentPhase
+    route_tag: str
+    nonce: int
+    opened_at: float
+    cashback_bps: int = 0
+    airdrop_weight: int = 0
+    hops: List[BGG_RouteHop] = field(default_factory=list)
+
+    def to_record(self) -> Dict[str, Any]:
+        d = asdict(self)
+        d["phase"] = int(self.phase)
+        d["hops"] = [asdict(h) for h in self.hops]
+        return d
+
+@dataclass
+class BGG_CashbackAccrual:
+    holder: str
+    epoch: int
+    accrued_wei: int
+    claimed_wei: int
+    tier: BGG_CashbackTier
+    last_intent: str
+
+@dataclass
+class BGG_AirdropLeaf:
+    index: int
+    account: str
+    allocation_wei: int
+    epoch: int
+
+    def leaf_hash(self) -> bytes:
+        packed = f"{self.index}:{self.account.lower()}:{self.allocation_wei}:{self.epoch}"
+        return hashlib.sha256(packed.encode()).digest()
+
+@dataclass
+class BGG_SettlementReceipt:
+    intent_id: str
+    kind: BGG_SettlementKind
+    gross_wei: int
+    fee_wei: int
+    cashback_wei: int
+    settled_at: float
+
+@dataclass
+class BGG_ChainEndpoint:
+    chain_id: int
+    family: BGG_ChainFamily
+    gateway: str
+    finality_blocks: int
+    enabled: bool = True
+
+@dataclass
