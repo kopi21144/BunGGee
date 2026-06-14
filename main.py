@@ -502,3 +502,75 @@ def _seed_route_profiles() -> Dict[str, Tuple[int, List[BGG_RouteHop]]]:
     hops_12.append(BGG_RouteHop(chain_id=179035, relay="0x7d5F1a68Ac954B88F0CBa5d0CAc53f56510628c7", fee_bps=75, min_confirmations=9))
     profiles["lane_1253cc"] = (334, hops_12)
     hops_13: List[BGG_RouteHop] = []
+    hops_13.append(BGG_RouteHop(chain_id=931702, relay="0xDa94833cBA06341B2C38ad13C8A6094cEC10B1c4", fee_bps=96, min_confirmations=22))
+    hops_13.append(BGG_RouteHop(chain_id=425440, relay="0xF7871beD8A01d47929FABaF83Fa401505cD7878C", fee_bps=112, min_confirmations=3))
+    hops_13.append(BGG_RouteHop(chain_id=552210, relay="0xFCA15AE9c49818FEeF5308DBB64C13bF96D62f0e", fee_bps=65, min_confirmations=5))
+    hops_13.append(BGG_RouteHop(chain_id=334910, relay="0x8dd57D4C5206E60E81cbc766745519eB0dCbCD87", fee_bps=109, min_confirmations=14))
+    profiles["lane_7b05ce"] = (652, hops_13)
+    hops_14: List[BGG_RouteHop] = []
+    hops_14.append(BGG_RouteHop(chain_id=222230, relay="0xe2Dc172A4F47323332ac4E55486131Bb21f58c7a", fee_bps=74, min_confirmations=19))
+    hops_14.append(BGG_RouteHop(chain_id=342404, relay="0x7B78e41279cd280390Ac93B752e3be3031b7c93A", fee_bps=122, min_confirmations=12))
+    hops_14.append(BGG_RouteHop(chain_id=256057, relay="0x053b2dbB06924B7c50E635C4743e24e9f956BA0F", fee_bps=108, min_confirmations=7))
+    hops_14.append(BGG_RouteHop(chain_id=252415, relay="0x91fbc40826E5EE8F4B84861213bA9C5869A68ecf", fee_bps=57, min_confirmations=4))
+    profiles["lane_70d228"] = (211, hops_14)
+    hops_15: List[BGG_RouteHop] = []
+    hops_15.append(BGG_RouteHop(chain_id=222847, relay="0xDfAEc7FC17c213eC2764582574ADA0e098D76D0e", fee_bps=87, min_confirmations=17))
+    hops_15.append(BGG_RouteHop(chain_id=907847, relay="0x557Af179b6988d4c9D7f65E57833BAba9B9C2Ab4", fee_bps=65, min_confirmations=11))
+    profiles["lane_7f835a"] = (679, hops_15)
+    hops_16: List[BGG_RouteHop] = []
+    hops_16.append(BGG_RouteHop(chain_id=811915, relay="0xa9f4b7eB377792CC2767AF7Fd60E181199777aC4", fee_bps=75, min_confirmations=16))
+    hops_16.append(BGG_RouteHop(chain_id=737397, relay="0x7f2dbBa759c510426b6F678E3458651Cce11B7c1", fee_bps=10, min_confirmations=3))
+    hops_16.append(BGG_RouteHop(chain_id=289199, relay="0x5377C42af80eE2148AEba683EABdBA4753a4e45d", fee_bps=59, min_confirmations=4))
+    hops_16.append(BGG_RouteHop(chain_id=280245, relay="0x000D27ceC3a861E17a380973763D437E313a7AfC", fee_bps=53, min_confirmations=17))
+    profiles["lane_cf1cfc"] = (347, hops_16)
+    hops_17: List[BGG_RouteHop] = []
+    hops_17.append(BGG_RouteHop(chain_id=129059, relay="0x07825976a0a042AEED074153adD3DD0651CA58E5", fee_bps=125, min_confirmations=6))
+    hops_17.append(BGG_RouteHop(chain_id=949207, relay="0x4c6572028dc958847B9d4dAf564E76eabB61e699", fee_bps=92, min_confirmations=12))
+    hops_17.append(BGG_RouteHop(chain_id=467537, relay="0xE1E3127BfE5ce093259755DD1FE93bB511e86793", fee_bps=14, min_confirmations=7))
+    hops_17.append(BGG_RouteHop(chain_id=758616, relay="0x8b5e77259303438fc4b786f9237bac8ad212e36C", fee_bps=19, min_confirmations=5))
+    profiles["lane_ed7ecc"] = (358, hops_17)
+    return profiles
+
+BGG_REPLAY_GUARDS: Tuple[str, ...] = (
+    "0xd9146a188e30347de4f00735857170a2e2ffcd15c2a618132fe9e64c2ff3b1bc",
+    "0xea3a9383a037c9a110a30e2b288f6f6946da2d5af17b9a9a7bd2d7e892d8ae05",
+    "0x3af23b931cd13b0b4605e0b85bd95705e3d7cdd7c76b6a0752236bef0d4da9d3",
+    "0x12ca67de8ee5be54d4697c8d11ecf7fb5f32ef0e5e0ed31180eccb813e2cfd7b",
+    "0xb9d5ed69ca3dc253c6acf04dd612baabdfcdd21b929ae896bea1ffef9b8070a4",
+    "0x1c9474377f3927c10f527c423ca6cd1cc2693533cd8a0db3fcac4a8ed213fb45",
+    "0x3c395862cd18d1235a50e5e05700e872bb3bfb5d936cf9b100fc37a365d9dade",
+    "0x6e383fb7a011981ae95be3e359909a47e143d59dbfa9e9ccf3282c1b037485aa",
+    "0x3b0b2a759fda4c6c4e69ad4911ec52ca209c22798a9139e97fec77a4870489f8",
+    "0x583fa10c183cff622322999909e7f53527a1130aa1a2e81278544d93f0a46d80",
+    "0x556937ce51ed8e0b68dd3ca1f3bad92ce2a9c0038c8161120533a07fd9f80c52",
+    "0x57eb7f667c44bed3546c22a2c256e27208894593f5fd8dbeb417c946ff26a1bd",
+    "0xc40897e1167cc32e7934250906cac5136e40f4ec2a2bd1b9eafe52d04f894066",
+    "0x1443883d1d51f1cb06e30a4f2449556b38248ce1d5137993e141913ed6347703",
+    "0x42caf745197c95649a2b7f977e2a1c9dc37deddf7eb763dae50dcb50e562a904",
+    "0x9f48ad8c5190f2f2e9cae644db583fb62191b77fb55d0186e101c80d38c0bbb1",
+    "0x5291421d032e21549be89be38645f49a1ae36a2e645a29af27e62630c1f3fb1c",
+    "0xd260cd2c0952e1823c117dfde858e207716a23cbc81a6e20e253f8ffe1856497",
+    "0x58c330e547de65f69fbf24464ff396fafbad8b16ca9767e7a50233c4bd31ede9",
+    "0x4f12f808c4f9c44d2efaecd6b76e3ddbd1f99b4f44cd0b1d13b238a0256e032a",
+    "0xf488d3f27fa2ce4d23f33b1a2694f455933eec1659cfa41ab93879338adf91d1",
+    "0x4b271b711680da7444b2550ecfc14090407a41e6f4df9e52cf2b354d8f482825",
+    "0xf4af59e15c4002c5455cd23a2ae93b8c3dc0e1115d68ae7767ea9dfd80e432ca",
+)
+
+BGG_BATCH_SLOTS: Dict[int, Tuple[int, int, str]] = {
+    0: (239, 749, "batch_c304"),
+    1: (123, 522, "batch_0245"),
+    2: (215, 1078, "batch_1d1e"),
+    3: (414, 1205, "batch_5356"),
+    4: (220, 809, "batch_8747"),
+    5: (450, 1126, "batch_b18e"),
+    6: (501, 855, "batch_c8d0"),
+    7: (366, 969, "batch_8ec7"),
+    8: (104, 942, "batch_df2c"),
+    9: (484, 1184, "batch_89be"),
+    10: (224, 642, "batch_695e"),
+    11: (228, 1184, "batch_a041"),
+    12: (335, 798, "batch_b20e"),
+    13: (462, 1318, "batch_63c9"),
+    14: (140, 572, "batch_668d"),
+    15: (226, 1179, "batch_cba2"),
