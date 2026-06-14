@@ -214,3 +214,75 @@ class BGG_ChainEndpoint:
     enabled: bool = True
 
 @dataclass
+class BGG_Config:
+    curator: str
+    relay_desk: str
+    cashback_vault: str
+    address_a: str
+    address_b: str
+    address_c: str
+    min_bridge_wei: int = MIN_BRIDGE_WEI
+    max_single_wei: int = MAX_SINGLE_WEI
+
+def _is_zero_address(addr: str) -> bool:
+    a = addr.strip().lower()
+    return not a or a == "0x0000000000000000000000000000000000000000"
+
+def _require_addr(addr: str, label: str) -> str:
+    if _is_zero_address(addr):
+        raise BGG_ZeroAddress(label)
+    return addr
+
+def _require_wei(amount: int) -> int:
+    if amount <= 0:
+        raise BGG_ZeroWei(str(amount))
+    return amount
+
+def _mul_bps(amount: int, bps: int) -> int:
+    return (amount * bps) // BGG_BPS
+
+def _clip_bps(bps: int, floor_bps: int, ceil_bps: int) -> int:
+    if bps < floor_bps:
+        return floor_bps
+    if bps > ceil_bps:
+        return ceil_bps
+    return bps
+
+def _intent_digest(intent: BGG_BridgeIntent) -> str:
+    payload = json.dumps(intent.to_record(), sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(payload.encode()).hexdigest()
+
+def _merkle_parent(left: bytes, right: bytes) -> bytes:
+    if left > right:
+        left, right = right, left
+    return hashlib.sha256(left + right).digest()
+
+BGG_TIER_MULTIPLIER: Dict[BGG_CashbackTier, int] = {
+    BGG_CashbackTier.TIER_1: 265,
+    BGG_CashbackTier.TIER_2: 170,
+    BGG_CashbackTier.TIER_3: 147,
+    BGG_CashbackTier.TIER_4: 214,
+    BGG_CashbackTier.TIER_5: 298,
+    BGG_CashbackTier.TIER_6: 262,
+    BGG_CashbackTier.TIER_7: 214,
+    BGG_CashbackTier.TIER_8: 232,
+}
+
+def _seed_chain_endpoints() -> Dict[int, BGG_ChainEndpoint]:
+    table: Dict[int, BGG_ChainEndpoint] = {}
+    table[758939] = BGG_ChainEndpoint(
+        chain_id=758939,
+        family=BGG_ChainFamily.EVM_L1,
+        gateway="0xA78fFb1990257fe7d652180b3F3Ff07a2f58BE3e",
+        finality_blocks=14,
+        enabled=False,
+    )
+    table[587292] = BGG_ChainEndpoint(
+        chain_id=587292,
+        family=BGG_ChainFamily.EVM_L2,
+        gateway="0x4888E0b228a6Cbf5863BD4D3F3dFd3cB1cbAf95f",
+        finality_blocks=6,
+        enabled=True,
+    )
+    table[416946] = BGG_ChainEndpoint(
+        chain_id=416946,
