@@ -70,3 +70,75 @@ class BGG_ChainFamily(IntEnum):
 class BGG_SettlementKind(IntEnum):
     STANDARD = 0
     EXPRESS = 1
+    BATCH = 2
+    AIRDROP_TOPUP = 3
+
+class BGG_ZeroAddress(Exception):
+    def __init__(self, detail: str = "") -> None:
+        base = "address required"
+        super().__init__(f"BGG: {base}" + (f" ({detail})" if detail else ""))
+
+class BGG_ZeroWei(Exception):
+    def __init__(self, detail: str = "") -> None:
+        base = "amount must be positive"
+        super().__init__(f"BGG: {base}" + (f" ({detail})" if detail else ""))
+
+class BGG_NotCurator(Exception):
+    def __init__(self, detail: str = "") -> None:
+        base = "caller is not curator"
+        super().__init__(f"BGG: {base}" + (f" ({detail})" if detail else ""))
+
+class BGG_IntentFrozen(Exception):
+    def __init__(self, detail: str = "") -> None:
+        base = "intent lane paused"
+        super().__init__(f"BGG: {base}" + (f" ({detail})" if detail else ""))
+
+class BGG_CapExceeded(Exception):
+    def __init__(self, detail: str = "") -> None:
+        base = "bridge cap exceeded"
+        super().__init__(f"BGG: {base}" + (f" ({detail})" if detail else ""))
+
+class BGG_Replay(Exception):
+    def __init__(self, detail: str = "") -> None:
+        base = "nonce already consumed"
+        super().__init__(f"BGG: {base}" + (f" ({detail})" if detail else ""))
+
+class BGG_InvalidRoute(Exception):
+    def __init__(self, detail: str = "") -> None:
+        base = "route profile unknown"
+        super().__init__(f"BGG: {base}" + (f" ({detail})" if detail else ""))
+
+class BGG_PendingOverflow(Exception):
+    def __init__(self, detail: str = "") -> None:
+        base = "pending queue full"
+        super().__init__(f"BGG: {base}" + (f" ({detail})" if detail else ""))
+
+class BGG_CashbackFloor(Exception):
+    def __init__(self, detail: str = "") -> None:
+        base = "cashback below floor"
+        super().__init__(f"BGG: {base}" + (f" ({detail})" if detail else ""))
+
+class BGG_AirdropClip(Exception):
+    def __init__(self, detail: str = "") -> None:
+        base = "airdrop clip exceeded"
+        super().__init__(f"BGG: {base}" + (f" ({detail})" if detail else ""))
+
+class BGG_MerkleReject(Exception):
+    def __init__(self, detail: str = "") -> None:
+        base = "merkle proof invalid"
+        super().__init__(f"BGG: {base}" + (f" ({detail})" if detail else ""))
+
+class BGG_EpochClosed(Exception):
+    def __init__(self, detail: str = "") -> None:
+        base = "epoch not accepting claims"
+        super().__init__(f"BGG: {base}" + (f" ({detail})" if detail else ""))
+
+class BGG_SelfBridge(Exception):
+    def __init__(self, detail: str = "") -> None:
+        base = "source and dest must differ"
+        super().__init__(f"BGG: {base}" + (f" ({detail})" if detail else ""))
+
+class BGG_HopLimit(Exception):
+    def __init__(self, detail: str = "") -> None:
+        base = "hop count exceeds max"
+        super().__init__(f"BGG: {base}" + (f" ({detail})" if detail else ""))
