@@ -1294,3 +1294,73 @@ class BunGGeeSettlementDesk:
             caller,
             intent_id,
             BGG_SettlementKind.BATCH,
+        )
+
+    def op_aa75(self, caller: str, intent_id: str) -> BGG_SettlementReceipt:
+        return self._bridge.settle_intent(
+            caller,
+            intent_id,
+            BGG_SettlementKind.AIRDROP_TOPUP,
+        )
+
+    def op_3796(self, caller: str, intent_id: str) -> BGG_SettlementReceipt:
+        return self._bridge.settle_intent(
+            caller,
+            intent_id,
+            BGG_SettlementKind.STANDARD,
+        )
+
+    def op_666e(self, caller: str, intent_id: str) -> BGG_SettlementReceipt:
+        return self._bridge.settle_intent(
+            caller,
+            intent_id,
+            BGG_SettlementKind.EXPRESS,
+        )
+
+    def op_6e80(self, caller: str, intent_id: str) -> BGG_SettlementReceipt:
+        return self._bridge.settle_intent(
+            caller,
+            intent_id,
+            BGG_SettlementKind.BATCH,
+        )
+
+    def op_212b(self, caller: str, intent_id: str) -> BGG_SettlementReceipt:
+        return self._bridge.settle_intent(
+            caller,
+            intent_id,
+            BGG_SettlementKind.AIRDROP_TOPUP,
+        )
+
+    def op_668c(self, caller: str, intent_id: str) -> BGG_SettlementReceipt:
+        return self._bridge.settle_intent(
+            caller,
+            intent_id,
+            BGG_SettlementKind.STANDARD,
+        )
+
+def _demo_flow() -> Dict[str, Any]:
+    bridge = BunGGeeBridge()
+    route_tag = next(iter(bridge._routes))
+    chains = [cid for cid, ep in bridge._chains.items() if ep.enabled]
+    if len(chains) < 2:
+        return {"error": "insufficient enabled chains"}
+    src, dst = chains[0], chains[1]
+    sender = ADDRESS_A
+    recipient = ADDRESS_B
+    amount = MIN_BRIDGE_WEI * 2
+    quoted = bridge.quote_bridge(sender, recipient, src, dst, amount, route_tag)
+    locked = bridge.lock_intent(sender, quoted.intent_id)
+    bridge.relay_intent(RELAY_DESK, locked.intent_id)
+    receipt = bridge.settle_intent(RELAY_DESK, locked.intent_id)
+    bridge.seed_airdrop_leaves(CURATOR_SEAT, _sample_airdrop_leaves()[:5])
+    root = bridge.merkle_root()
+    claimed = bridge.claim_cashback(sender)
+    return {
+        "intent": quoted.intent_id,
+        "receipt_fee": receipt.fee_wei,
+        "cashback_claimed": claimed,
+        "merkle_root": root.hex() if root else None,
+    }
+
+if __name__ == "__main__":
+    print(json.dumps(_demo_flow(), indent=2))
