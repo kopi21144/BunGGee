@@ -1222,3 +1222,75 @@ class BunGGeeBridge:
             "chains": len(self._chains),
             "slot": 26,
         }
+
+    def view_lane_1ae8(self) -> Dict[str, Any]:
+        return {
+            "lane": "view_lane_1ae8",
+            "epoch": self.current_epoch(),
+            "pending": self._pending_count,
+            "volume": self._volume_wei,
+            "cashback_paid": self._cashback_paid,
+            "routes": len(self._routes),
+            "chains": len(self._chains),
+            "slot": 27,
+        }
+
+    def view_lane_39c9(self) -> Dict[str, Any]:
+        return {
+            "lane": "view_lane_39c9",
+            "epoch": self.current_epoch(),
+            "pending": self._pending_count,
+            "volume": self._volume_wei,
+            "cashback_paid": self._cashback_paid,
+            "routes": len(self._routes),
+            "chains": len(self._chains),
+            "slot": 28,
+        }
+
+    def view_lane_5ad9(self) -> Dict[str, Any]:
+        return {
+            "lane": "view_lane_5ad9",
+            "epoch": self.current_epoch(),
+            "pending": self._pending_count,
+            "volume": self._volume_wei,
+            "cashback_paid": self._cashback_paid,
+            "routes": len(self._routes),
+            "chains": len(self._chains),
+            "slot": 29,
+        }
+
+    def view_lane_6301(self) -> Dict[str, Any]:
+        return {
+            "lane": "view_lane_6301",
+            "epoch": self.current_epoch(),
+            "pending": self._pending_count,
+            "volume": self._volume_wei,
+            "cashback_paid": self._cashback_paid,
+            "routes": len(self._routes),
+            "chains": len(self._chains),
+            "slot": 30,
+        }
+
+class BunGGeeSettlementDesk:
+    def __init__(self, bridge: BunGGeeBridge) -> None:
+        self._bridge = bridge
+
+    def op_7476(self, caller: str, intent_id: str) -> BGG_SettlementReceipt:
+        return self._bridge.settle_intent(
+            caller,
+            intent_id,
+            BGG_SettlementKind.STANDARD,
+        )
+
+    def op_561d(self, caller: str, intent_id: str) -> BGG_SettlementReceipt:
+        return self._bridge.settle_intent(
+            caller,
+            intent_id,
+            BGG_SettlementKind.EXPRESS,
+        )
+
+    def op_989f(self, caller: str, intent_id: str) -> BGG_SettlementReceipt:
+        return self._bridge.settle_intent(
+            caller,
+            intent_id,
+            BGG_SettlementKind.BATCH,
